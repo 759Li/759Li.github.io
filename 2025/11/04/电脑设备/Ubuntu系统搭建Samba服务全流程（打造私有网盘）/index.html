@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Ubuntu系统搭建Samba服务全流程（打造私有网盘） | 左窗的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="(本文由AI整理总结)(对CSDN已写文章进行转移，lzb759账号为本人账号)在日常工作与生活中，我们常常需要在多设备间共享文件。Ubuntu系统下的Samba服务能帮我们实现这一需求，将本地目录变身为可跨设备访问的私有网盘。本文将详细介绍从环境准备到多设备访问的完整流程。  一、环境准备1. 检查系统信息首先，我们需要了解系统的基本情况，以便后续操作。打开终端，执行以下命令： 12345# 查">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu系统搭建Samba服务全流程（打造私有网盘）">
+<meta property="og:url" content="https://759li.github.io/2025/11/04/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/Ubuntu%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BASamba%E6%9C%8D%E5%8A%A1%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E6%89%93%E9%80%A0%E7%A7%81%E6%9C%89%E7%BD%91%E7%9B%98%EF%BC%89/index.html">
+<meta property="og:site_name" content="左窗的博客">
+<meta property="og:description" content="(本文由AI整理总结)(对CSDN已写文章进行转移，lzb759账号为本人账号)在日常工作与生活中，我们常常需要在多设备间共享文件。Ubuntu系统下的Samba服务能帮我们实现这一需求，将本地目录变身为可跨设备访问的私有网盘。本文将详细介绍从环境准备到多设备访问的完整流程。  一、环境准备1. 检查系统信息首先，我们需要了解系统的基本情况，以便后续操作。打开终端，执行以下命令： 12345# 查">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://759li.github.io/2025/11/04/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/Ubuntu%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BASamba%E6%9C%8D%E5%8A%A1%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E6%89%93%E9%80%A0%E7%A7%81%E6%9C%89%E7%BD%91%E7%9B%98%EF%BC%89/0004_02.png">
+<meta property="og:image" content="https://759li.github.io/2025/11/04/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/Ubuntu%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BASamba%E6%9C%8D%E5%8A%A1%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E6%89%93%E9%80%A0%E7%A7%81%E6%9C%89%E7%BD%91%E7%9B%98%EF%BC%89/0004_01.png">
+<meta property="og:image" content="https://759li.github.io/2025/11/04/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/Ubuntu%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BASamba%E6%9C%8D%E5%8A%A1%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E6%89%93%E9%80%A0%E7%A7%81%E6%9C%89%E7%BD%91%E7%9B%98%EF%BC%89/0004_05.png">
+<meta property="og:image" content="https://759li.github.io/2025/11/04/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/Ubuntu%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BASamba%E6%9C%8D%E5%8A%A1%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E6%89%93%E9%80%A0%E7%A7%81%E6%9C%89%E7%BD%91%E7%9B%98%EF%BC%89/0004_04.png">
+<meta property="og:image" content="https://759li.github.io/2025/11/04/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/Ubuntu%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BASamba%E6%9C%8D%E5%8A%A1%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E6%89%93%E9%80%A0%E7%A7%81%E6%9C%89%E7%BD%91%E7%9B%98%EF%BC%89/0004_06.png">
+<meta property="og:image" content="https://759li.github.io/2025/11/04/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/Ubuntu%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BASamba%E6%9C%8D%E5%8A%A1%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E6%89%93%E9%80%A0%E7%A7%81%E6%9C%89%E7%BD%91%E7%9B%98%EF%BC%89/0004_09.png">
+<meta property="og:image" content="https://759li.github.io/2025/11/04/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/Ubuntu%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BASamba%E6%9C%8D%E5%8A%A1%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E6%89%93%E9%80%A0%E7%A7%81%E6%9C%89%E7%BD%91%E7%9B%98%EF%BC%89/0004_07.png">
+<meta property="og:image" content="https://759li.github.io/2025/11/04/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/Ubuntu%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BASamba%E6%9C%8D%E5%8A%A1%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E6%89%93%E9%80%A0%E7%A7%81%E6%9C%89%E7%BD%91%E7%9B%98%EF%BC%89/0004_03.png">
+<meta property="og:image" content="https://759li.github.io/2025/11/04/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/Ubuntu%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BASamba%E6%9C%8D%E5%8A%A1%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E6%89%93%E9%80%A0%E7%A7%81%E6%9C%89%E7%BD%91%E7%9B%98%EF%BC%89/0004_10.png">
+<meta property="og:image" content="https://759li.github.io/2025/11/04/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/Ubuntu%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BASamba%E6%9C%8D%E5%8A%A1%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E6%89%93%E9%80%A0%E7%A7%81%E6%9C%89%E7%BD%91%E7%9B%98%EF%BC%89/0004_08.png">
+<meta property="article:published_time" content="2025-11-04T15:32:43.000Z">
+<meta property="article:modified_time" content="2025-11-07T15:24:07.852Z">
+<meta property="article:author" content="左窗（默蝶）">
+<meta property="article:tag" content="技术,诗歌,生活">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://759li.github.io/2025/11/04/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/Ubuntu%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BASamba%E6%9C%8D%E5%8A%A1%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E6%89%93%E9%80%A0%E7%A7%81%E6%9C%89%E7%BD%91%E7%9B%98%EF%BC%89/0004_02.png">
+  
+    <link rel="alternate" href="/atom.xml" title="左窗的博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <style>
+  .busuanzi-count { 
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .loaded .busuanzi-count { 
+    opacity: 1; 
+  }
+  </style>
+  <script>
+  window.addEventListener('load', () => {
+    document.body.classList.add('loaded');
+  });
+  </script>
+<meta name="generator" content="Hexo 8.1.1"></head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">左窗的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">记录技术踩坑与生活碎片</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          
+            <a class="nav-icon" target="_blank" rel="noopener" href="https://github.com/759Li"><span class="fa fa-github"></span></a>
+          
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://759Li.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-电脑设备/Ubuntu系统搭建Samba服务全流程（打造私有网盘）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/11/04/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/Ubuntu%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BASamba%E6%9C%8D%E5%8A%A1%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E6%89%93%E9%80%A0%E7%A7%81%E6%9C%89%E7%BD%91%E7%9B%98%EF%BC%89/" class="article-date">
+  <time class="dt-published" datetime="2025-11-04T15:32:43.000Z" itemprop="datePublished">2025年11月04日</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/">电脑设备</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Ubuntu系统搭建Samba服务全流程（打造私有网盘）
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>(本文由AI整理总结)(对CSDN已写文章进行转移，lzb759账号为本人账号)<br>在日常工作与生活中，我们常常需要在多设备间共享文件。Ubuntu系统下的Samba服务能帮我们实现这一需求，将本地目录变身为可跨设备访问的私有网盘。本文将详细介绍从环境准备到多设备访问的完整流程。</p>
+<hr>
+<h2 id="一、环境准备"><a href="#一、环境准备" class="headerlink" title="一、环境准备"></a>一、环境准备</h2><h3 id="1-检查系统信息"><a href="#1-检查系统信息" class="headerlink" title="1. 检查系统信息"></a>1. 检查系统信息</h3><p>首先，我们需要了解系统的基本情况，以便后续操作。打开终端，执行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看系统版本</span></span><br><span class="line">lsb_release -a</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看磁盘分区（选择空间充足的分区创建共享目录）</span></span><br><span class="line"><span class="built_in">df</span> -h</span><br></pre></td></tr></table></figure>
+<img src="0004_02.png"/>
+
+<h3 id="2-确认网络状态"><a href="#2-确认网络状态" class="headerlink" title="2. 确认网络状态"></a>2. 确认网络状态</h3><p>确保服务器已连接网络，并记录内网IP（后续设备访问需要用到）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip addr show | grep -E <span class="string">&quot;inet &quot;</span> | grep -v 127.0.0.1</span><br></pre></td></tr></table></figure>
+<img src="0004_01.png"/>
+
+<h2 id="二、安装Samba服务"><a href="#二、安装Samba服务" class="headerlink" title="二、安装Samba服务"></a>二、安装Samba服务</h2><h3 id="1-安装Samba软件包"><a href="#1-安装Samba软件包" class="headerlink" title="1. 安装Samba软件包"></a>1. 安装Samba软件包</h3><p>更新软件源并安装Samba服务，在终端输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 更新软件源</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装Samba服务</span></span><br><span class="line"><span class="built_in">sudo</span> apt install -y samba samba-common</span><br></pre></td></tr></table></figure>
+<img src="0004_05.png"/>
+
+<h3 id="2-验证安装状态"><a href="#2-验证安装状态" class="headerlink" title="2. 验证安装状态"></a>2. 验证安装状态</h3><p>安装完成后，检查Samba版本和服务状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看Samba版本</span></span><br><span class="line">smbd --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查服务状态（刚安装后默认未启动）</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl status smbd nmbd</span><br></pre></td></tr></table></figure>
+<img src="0004_04.png"/>
+
+<hr>
+<h2 id="三、配置共享目录"><a href="#三、配置共享目录" class="headerlink" title="三、配置共享目录"></a>三、配置共享目录</h2><h3 id="1-创建共享目录"><a href="#1-创建共享目录" class="headerlink" title="1. 创建共享目录"></a>1. 创建共享目录</h3><p>选择空间充足的分区创建共享目录（这里以<code>/data/storage/share</code>为例）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建目录</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /data/storage/share</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置目录所有者（替换为当前用户名，如user）</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> -R <span class="variable">$USER</span>:<span class="variable">$USER</span> /data/storage/share</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置目录权限（确保读写权限）</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> -R 775 /data/storage/share</span><br></pre></td></tr></table></figure>
+<img src="0004_06.png"/>
+
+<h3 id="2-配置Samba共享规则"><a href="#2-配置Samba共享规则" class="headerlink" title="2. 配置Samba共享规则"></a>2. 配置Samba共享规则</h3><p>编辑Samba主配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> nano /etc/samba/smb.conf</span><br></pre></td></tr></table></figure>
+<p>在文件末尾添加如下共享配置（可根据实际情况修改）：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[share]</span></span><br><span class="line">    <span class="comment"># 共享名称（访问时显示）</span></span><br><span class="line">    <span class="attr">comment</span> = Private Cloud Storage</span><br><span class="line">    <span class="comment"># 共享目录绝对路径</span></span><br><span class="line">    <span class="attr">path</span> = /data/storage/share</span><br><span class="line">    <span class="comment"># 允许网络可见</span></span><br><span class="line">    <span class="attr">browseable</span> = <span class="literal">yes</span></span><br><span class="line">    <span class="comment"># 允许写入操作</span></span><br><span class="line">    <span class="attr">writable</span> = <span class="literal">yes</span></span><br><span class="line">    <span class="comment"># 禁止匿名访问</span></span><br><span class="line">    guest <span class="attr">ok</span> = <span class="literal">no</span></span><br><span class="line">    <span class="comment"># 允许访问的用户（替换为实际用户名）</span></span><br><span class="line">    valid <span class="attr">users</span> = user</span><br><span class="line">    <span class="comment"># 新建文件权限</span></span><br><span class="line">    create <span class="attr">mask</span> = <span class="number">0644</span></span><br><span class="line">    <span class="comment"># 新建目录权限</span></span><br><span class="line">    directory <span class="attr">mask</span> = <span class="number">0755</span></span><br></pre></td></tr></table></figure>
+<p>保存退出（<code>Ctrl+O</code> → 回车 → <code>Ctrl+X</code>）。</p>
+<h3 id="3-验证配置文件语法"><a href="#3-验证配置文件语法" class="headerlink" title="3. 验证配置文件语法"></a>3. 验证配置文件语法</h3><p>执行以下命令验证配置文件语法是否正确：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">testparm</span><br></pre></td></tr></table></figure>
+<p>若显示<code>Loaded services file OK.</code>，则表示配置正确。</p>
+<hr>
+<h2 id="四、创建Samba用户"><a href="#四、创建Samba用户" class="headerlink" title="四、创建Samba用户"></a>四、创建Samba用户</h2><p>Samba用户需基于系统已存在的用户，操作步骤如下：</p>
+<ol>
+<li><strong>确认系统用户存在</strong>（以<code>user</code>为例）：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">id</span> user  <span class="comment"># 输出用户ID信息表示存在</span></span><br></pre></td></tr></table></figure></li>
+<li><strong>添加Samba用户并设置密码</strong>：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> smbpasswd -a user</span><br></pre></td></tr></table></figure>
+输入并确认密码（与系统密码可不同）。</li>
+<li><strong>验证用户添加成功</strong>：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pdbedit -L  <span class="comment"># 列出所有Samba用户，应包含user</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<img src="0004_09.png"/>
+
+<hr>
+<h2 id="五、启动并配置Samba服务"><a href="#五、启动并配置Samba服务" class="headerlink" title="五、启动并配置Samba服务"></a>五、启动并配置Samba服务</h2><h3 id="1-启动服务"><a href="#1-启动服务" class="headerlink" title="1. 启动服务"></a>1. 启动服务</h3><p>启动Samba的核心服务<code>smbd</code>（文件共享）和<code>nmbd</code>（名称解析），并设置开机自启：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动smbd和nmbd</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start smbd nmbd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置开机自启</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> smbd nmbd</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-验证服务状态"><a href="#2-验证服务状态" class="headerlink" title="2. 验证服务状态"></a>2. 验证服务状态</h3><p>执行命令查看服务状态，需显示<code>active (running)</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl status smbd nmbd</span><br></pre></td></tr></table></figure>
+<img src="0004_07.png"/>
+
+<hr>
+<h2 id="六、配置防火墙"><a href="#六、配置防火墙" class="headerlink" title="六、配置防火墙"></a>六、配置防火墙</h2><h3 id="1-放行Samba端口（UFW防火墙）"><a href="#1-放行Samba端口（UFW防火墙）" class="headerlink" title="1. 放行Samba端口（UFW防火墙）"></a>1. 放行Samba端口（UFW防火墙）</h3><p>Samba服务需要用到TCP的139和445端口，执行以下命令放行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 允许Samba所需端口</span></span><br><span class="line"><span class="built_in">sudo</span> ufw allow 139/tcp</span><br><span class="line"><span class="built_in">sudo</span> ufw allow 445/tcp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新加载防火墙规则</span></span><br><span class="line"><span class="built_in">sudo</span> ufw reload</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看规则是否生效</span></span><br><span class="line"><span class="built_in">sudo</span> ufw status</span><br></pre></td></tr></table></figure>
+<img src="0004_03.png"/>
+
+<h2 id="七、访问测试"><a href="#七、访问测试" class="headerlink" title="七、访问测试"></a>七、访问测试</h2><h3 id="1-服务器本地测试"><a href="#1-服务器本地测试" class="headerlink" title="1. 服务器本地测试"></a>1. 服务器本地测试</h3><p>在服务器上本地连接共享，验证服务是否正常：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 连接本地共享</span></span><br><span class="line">smbclient //localhost/share -U user</span><br></pre></td></tr></table></figure>
+<p>输入密码后进入<code>smb:\&gt;</code>交互界面，说明服务正常。</p>
+<img src="0004_10.png"/>
+
+<h3 id="2-局域网设备访问"><a href="#2-局域网设备访问" class="headerlink" title="2. 局域网设备访问"></a>2. 局域网设备访问</h3><h4 id="Windows系统"><a href="#Windows系统" class="headerlink" title="Windows系统"></a>Windows系统</h4><ol>
+<li>打开「文件资源管理器」，在地址栏输入：<code>\\服务器内网IP\share</code>（例如<code>\\192.168.1.10\share</code>）。</li>
+<li>输入Samba用户名和密码，即可访问共享目录。</li>
+</ol>
+<img src="0004_08.png"/>
+
+<h4 id="手机设备（以ES文件浏览器为例）"><a href="#手机设备（以ES文件浏览器为例）" class="headerlink" title="手机设备（以ES文件浏览器为例）"></a>手机设备（以ES文件浏览器为例）</h4><ol>
+<li>打开APP → 「网络」→ 「SMB」→ 「新建连接」。</li>
+<li>输入服务器IP、用户名、密码，连接后访问<code>share</code>目录。</li>
+</ol>
+<h3 id="3-外网访问配置（可选）"><a href="#3-外网访问配置（可选）" class="headerlink" title="3. 外网访问配置（可选）"></a>3. 外网访问配置（可选）</h3><p>通过路由器端口映射实现外网访问：</p>
+<ol>
+<li>登录路由器管理后台（例如<code>192.168.1.1</code>）。</li>
+<li>添加端口映射规则，如下表：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>规则名称</th>
+<th>内部IP</th>
+<th>内部端口</th>
+<th>外部端口</th>
+<th>协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Samba1</td>
+<td>192.168.1.10</td>
+<td>139</td>
+<td>139</td>
+<td>TCP</td>
+</tr>
+<tr>
+<td>Samba2</td>
+<td>192.168.1.10</td>
+<td>445</td>
+<td>445</td>
+<td>TCP</td>
+</tr>
+</tbody></table>
+<ol start="3">
+<li>外网设备通过「外网IP+共享名称」访问（例如<code>\\220.181.XX.XX\share</code>）。</li>
+</ol>
+<hr>
+<h2 id="八、常见问题排查"><a href="#八、常见问题排查" class="headerlink" title="八、常见问题排查"></a>八、常见问题排查</h2><h3 id="1-访问被拒绝（NT-STATUS-ACCESS-DENIED）"><a href="#1-访问被拒绝（NT-STATUS-ACCESS-DENIED）" class="headerlink" title="1. 访问被拒绝（NT_STATUS_ACCESS_DENIED）"></a>1. 访问被拒绝（<code>NT_STATUS_ACCESS_DENIED</code>）</h3><p>如果出现访问被拒绝的情况，检查目录权限并重新设置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查目录权限</span></span><br><span class="line"><span class="built_in">ls</span> -ld /data/storage/share</span><br><span class="line"><span class="comment"># 重新设置权限</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> -R user:user /data/storage/share</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> -R 775 /data/storage/share</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-服务启动失败"><a href="#2-服务启动失败" class="headerlink" title="2. 服务启动失败"></a>2. 服务启动失败</h3><p>查看错误日志，检查配置文件语法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看错误日志</span></span><br><span class="line">journalctl -xeu smbd.service</span><br><span class="line"><span class="comment"># 检查配置文件语法</span></span><br><span class="line">testparm</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-防火墙拦截"><a href="#3-防火墙拦截" class="headerlink" title="3. 防火墙拦截"></a>3. 防火墙拦截</h3><p>可临时关闭防火墙测试，测试后重新启用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 临时关闭防火墙测试</span></span><br><span class="line"><span class="built_in">sudo</span> ufw <span class="built_in">disable</span></span><br><span class="line"><span class="comment"># 测试后重新启用</span></span><br><span class="line"><span class="built_in">sudo</span> ufw <span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>通过以上完整流程，我们成功在Ubuntu系统上搭建了Samba服务，实现了本地目录的跨设备共享，打造出专属的私有网盘，满足多设备文件共享的需求。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://759li.github.io/2025/11/04/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/Ubuntu%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BASamba%E6%9C%8D%E5%8A%A1%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E6%89%93%E9%80%A0%E7%A7%81%E6%9C%89%E7%BD%91%E7%9B%98%EF%BC%89/" data-id="cuidNofYZR7WNuYgwHbd9EVlb" data-title="Ubuntu系统搭建Samba服务全流程（打造私有网盘）" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2025/11/07/%E7%9E%8E%E9%BC%93%E6%8D%A3/%E8%A1%80%E7%B3%96%E8%AF%95%E7%BA%B8Y330%EF%BC%9A%E7%BB%93%E6%9E%84%E4%B8%8E%E5%8A%9F%E8%83%BD%E7%9A%84%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          血糖试纸Y330：结构与功能的深度剖析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2025/10/01/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/%E8%80%81%E4%B8%80%E4%BD%93%E5%BC%8F%E7%94%B5%E8%84%91%E5%AE%8C%E6%95%B4%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E6%95%B4%E7%90%86/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">老一体式（联想IdeaCentre B305）电脑完整配置信息整理</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+ 
+  <span style="margin: 0 8px;">|</span>
+  <span class="busuanzi-count" style="color: #666;">
+    <i class="fa fa-book" style="margin: 0 3px;"></i> 
+    阅读量：<span id="busuanzi_value_page_pv"></span> 次
+  </span>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%9A%E5%AE%A2%E5%85%A5%E9%97%A8/">博客入门</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%8D%95%E7%89%87%E6%9C%BA/">嵌入式单片机</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/">电脑设备</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%9E%8E%E9%BC%93%E6%8D%A3/">瞎鼓捣</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%97%E9%9B%86/">诗集</a><span class="category-list-count">60</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%97%E9%9B%86/%E6%97%A0%E6%9C%9F/">无期</a><span class="category-list-count">23</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/">2024</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">33</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2004/">2004</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2025/11/07/%E7%9E%8E%E9%BC%93%E6%8D%A3/%E8%A1%80%E7%B3%96%E8%AF%95%E7%BA%B8Y330%EF%BC%9A%E7%BB%93%E6%9E%84%E4%B8%8E%E5%8A%9F%E8%83%BD%E7%9A%84%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/">血糖试纸Y330：结构与功能的深度剖析</a>
+          </li>
+        
+          <li>
+            <a href="/2025/11/04/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/Ubuntu%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BASamba%E6%9C%8D%E5%8A%A1%E5%85%A8%E6%B5%81%E7%A8%8B%EF%BC%88%E6%89%93%E9%80%A0%E7%A7%81%E6%9C%89%E7%BD%91%E7%9B%98%EF%BC%89/">Ubuntu系统搭建Samba服务全流程（打造私有网盘）</a>
+          </li>
+        
+          <li>
+            <a href="/2025/10/01/%E7%94%B5%E8%84%91%E8%AE%BE%E5%A4%87/%E8%80%81%E4%B8%80%E4%BD%93%E5%BC%8F%E7%94%B5%E8%84%91%E5%AE%8C%E6%95%B4%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E6%95%B4%E7%90%86/">老一体式（联想IdeaCentre B305）电脑完整配置信息整理</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2025 左窗（默蝶）<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+    <br>
+    <div class="busuanzi-count" style="font-size: 0.9em; color: #666;">
+      <span id="busuanzi_container_site_uv">
+        总访客数：<i class="fa fa-user" style="margin: 0 3px;"></i> 
+        <span id="busuanzi_value_site_uv"></span> 人
+      </span>
+      <span style="margin: 0 8px;">|</span>
+      <span id="busuanzi_container_site_pv">
+        总浏览量：<i class="fa fa-eye" style="margin: 0 3px;"></i> 
+        <span id="busuanzi_value_site_pv"></span> 次
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
