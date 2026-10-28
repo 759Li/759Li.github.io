@@ -1,0 +1,6 @@
+# Next.js 源码（不部署到 GitHub Pages）
+next-blog/
+
+# 系统文件
+.DS_Store
+Thumbs.db
